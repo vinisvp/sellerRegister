@@ -25,7 +25,7 @@ public class SellerRequest {
 
     @NotNull(message = "Seller must have a gender")
     @Min(value = 0, message = "0 = Male and 1 = Female")
-    @Min(value = 1, message = "0 = Male and 1 = Female")
+    @Max(value = 1, message = "0 = Male and 1 = Female")
     private Integer gender;
 
     public String getName() {
