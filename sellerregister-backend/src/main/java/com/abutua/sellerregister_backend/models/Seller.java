@@ -1,5 +1,7 @@
 package com.abutua.sellerregister_backend.models;
 
+import com.abutua.sellerregister_backend.dto.SellerResponse;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +17,7 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String name;
 
     @Column(nullable = false)
@@ -105,5 +107,9 @@ public class Seller {
     public String toString() {
         return "Seller [id=" + id + ", name=" + name + ", salary=" + salary + ", bonus=" + bonus + ", gender=" + gender
                 + "]";
+    }
+
+    public SellerResponse toDTO(){
+        return new SellerResponse(id, name, salary, bonus, gender);
     }
 }
