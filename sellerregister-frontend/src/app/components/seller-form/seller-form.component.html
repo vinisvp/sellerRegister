@@ -1,1 +1,65 @@
-<p class="text-white">seller-form works!</p>
+<div class="container p-3 text-white">
+    <div class="display-5">
+        Cadastro de Vendedor
+    </div>
+    <form [formGroup]="formGroupSeller" #ngFormSeller="ngForm"> <!--TODO Make it responsive-->
+        <div class="row">
+            <div class="col-12 mb-3">
+                <label for="nameInput" class="form-label">Nome:</label>
+                <input type="text"
+                       class="form-control"
+                       id="nameInput"
+                       placeholder="Insira o nome do vendedor"
+                       formControlName="name">
+                <span *ngIf="ngFormSeller.submitted && name?.errors?.['required']" class="text-danger">*Nome requirido!</span>
+                <span *ngIf="ngFormSeller.submitted && name?.errors?.['minlength']" class="text-danger">*Nome precisa de 5 caracteres no minímo!</span>
+            </div>
+            <div class="col-6 mb-3">
+                <label for="salaryInput" class="form-label">Salário</label>
+                <input type="number"
+                       class="form-control"
+                       id="salaryInput"
+                       placeholder="Insira o salário do vendedor"
+                       formControlName="salary">
+                <span *ngIf="ngFormSeller.submitted && salary?.errors?.['required']" class="text-danger">*Salário requirido!</span>
+            </div>
+            <div class="col-6 mb-3">
+                <label for="bonusInput" class="form-label">Percentual de Bonificação</label>
+                <input type="text"
+                       class="form-control"
+                       id="bonusInput"
+                       placeholder="Insira o percentual de bonificação"
+                       formControlName="bonus">
+                <span *ngIf="ngFormSeller.submitted && bonus?.errors?.['min']" class="text-danger">*O bonus minímo é 0%!</span>
+                <span *ngIf="ngFormSeller.submitted && bonus?.errors?.['max']" class="text-danger">*O bonus maxímo é 100%!</span>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-1 form-label">Gênero</label>
+            <div class="col-1 form-check">
+                <input class="form-check-input"
+                       type="radio"
+                       value="0"
+                       name="gender"
+                       id="genderMale"
+                       formControlName="gender">
+                <label class="form-check-label" for="genderMale">
+                    <span class="badge text-bg-primary">M</span>
+                </label>
+            </div>
+            <div class="col-1 form-check">
+                <input class="form-check-input"
+                       type="radio"
+                       value="1"
+                       name="gender"
+                       id="genderFemale"
+                       formControlName="gender">
+                <label class="form-check-label" for="genderFemale">
+                    <span class="badge text-bg-danger">F</span>
+                </label>
+            </div>
+            <span *ngIf="ngFormSeller.submitted && gender?.errors?.['required']" class="text-danger">*Gênero requirido!</span>
+        </div>
+        <button type="submit" (click)="save()" class="btn btn-primary">Cadastrar</button>
+    </form>
+</div>
