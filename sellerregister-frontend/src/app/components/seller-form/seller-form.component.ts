@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Seller } from '../../interfaces/Seller';
 
@@ -7,7 +7,7 @@ import { Seller } from '../../interfaces/Seller';
   templateUrl: './seller-form.component.html',
   styleUrl: './seller-form.component.css'
 })
-export class SellerFormComponent {
+export class SellerFormComponent implements OnChanges {
 
   submitted : Boolean = false;
   formGroupSeller: FormGroup;
@@ -19,10 +19,16 @@ export class SellerFormComponent {
     this.formGroupSeller = this.formBuilder.group({
       id : {value:null, disable:true},
       name : ['', [Validators.required, Validators.minLength(5)]],
-      salary : ['', [Validators.required]],
-      bonus : ['', [Validators.min(0), Validators.max(100)]],
+      salary : ['', [Validators.required, Validators.min(Number.MIN_VALUE)]],
+      bonus : ['0', [Validators.required, Validators.min(0), Validators.max(100)]],
       gender : ['', [Validators.required]]
     });
+  }
+
+  ngOnChanges(): void {
+    if(this.seller.id){
+      this.formGroupSeller.setValue(this.seller);
+    }
   }
 
   @Output()

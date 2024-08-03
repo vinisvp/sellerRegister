@@ -1,43 +1,74 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Seller } from '../../interfaces/Seller';
+import { SellerService } from '../../services/seller.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-sellers',
   templateUrl: './sellers.component.html',
   styleUrl: './sellers.component.css'
 })
-export class SellersComponent {
+export class SellersComponent implements OnInit {
 
-  sellers : Seller[] = [
-    {
-      id: 1,
-      name: "Marco Antonio",
-      salary: 5000,
-      bonus: 10,
-      gender: 0
-    },
-    {
-      id: 2,
-      name: "Ana Rodriguez",
-      salary: 2500,
-      bonus: 2,
-      gender: 1
-    }
-  ];
+  sellers: Seller[] = [];
+  seller: Seller = {} as Seller;
+  deleteSeller: Seller = {} as Seller;
 
-  seller : Seller = {} as Seller;
-  showForm : boolean = false;
+  showForm: boolean = false;
+  isEditing: boolean = false;
 
-  newSeller(){
+  constructor(private sellerService: SellerService,
+              private modalService: NgbModal) {}
+
+  loadSellers() {
+    this.sellerService.getSellers().subscribe({
+      next: data => this.sellers = data
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadSellers();
+  }
+
+  newSeller() {
     this.showForm = true;
   }
 
-  save(save: boolean){
-    if(save){
-      console.log(this.seller);
+  edit(seller: Seller) {
+    this.seller = seller;
+    this.isEditing = true;
+    this.showForm = true;
+  }
+
+  save(save: boolean) {
+    if (save) {
+      if (!this.isEditing) {
+        this.sellerService.save(this.seller).subscribe({
+          next: () => this.loadSellers()
+        });
+      }
+      else {
+        this.sellerService.update(this.seller).subscribe({
+          next: () => this.loadSellers()
+        });
+      }
     }
 
     this.seller = {} as Seller;
+    this.isEditing = false;
     this.showForm = false;
+  }
+
+  delete(modal: any, seller : Seller){
+    this.deleteSeller = seller;
+    this.modalService.open(modal).result.then(
+      (confirm) => {
+        if(confirm) {
+          this.sellerService.delete(seller).subscribe({
+            next: () => this.loadSellers()
+          })
+        }
+      }
+    )
   }
 }
