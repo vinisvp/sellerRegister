@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Seller } from '../../interfaces/Seller';
 
 @Component({
   selector: 'app-seller-form',
@@ -7,10 +8,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './seller-form.component.css'
 })
 export class SellerFormComponent {
-  
+
   submitted : Boolean = false;
   formGroupSeller: FormGroup;
-  
+
+  @Input()
+  seller : Seller = {} as Seller;
+
   constructor(private formBuilder: FormBuilder) {
     this.formGroupSeller = this.formBuilder.group({
       id : {value:null, disable:true},
@@ -21,10 +25,18 @@ export class SellerFormComponent {
     });
   }
 
+  @Output()
+  saveEmitter = new EventEmitter();
+
   save(){
     if(this.formGroupSeller.valid){
-      console.log(this.formGroupSeller.value);
+      Object.assign(this.seller, this.formGroupSeller.value);
+      this.saveEmitter.emit(true);
     }
+  }
+
+  cancel(){
+    this.saveEmitter.emit(false);
   }
 
   get name() {return this.formGroupSeller.get('name')};
